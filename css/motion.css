@@ -1,0 +1,144 @@
+/* ============================================================
+   motion.css — effects ported from nexu-io/motion-anything (Apache-2.0)
+   Source: https://github.com/nexu-io/motion-anything  (recipes in /recipes/web)
+   Every effect honors `prefers-reduced-motion: reduce` (static fallback).
+   Effects used + origins are listed in EFFECTS.md.
+   ============================================================ */
+
+/* --- shiny-text (recipes/web/shiny-text) --- */
+.shiny { --shiny-base:#b9a48c; --shiny-hi:#fff;
+  background:linear-gradient(100deg,var(--shiny-base) 40%,var(--shiny-hi) 50%,var(--shiny-base) 60%);
+  background-size:200% 100%; -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent; animation:shiny-sweep 3.2s linear infinite; }
+@keyframes shiny-sweep{0%{background-position:150% 0}100%{background-position:-50% 0}}
+@media(prefers-reduced-motion:reduce){.shiny{animation:none;background:none;-webkit-text-fill-color:currentColor;color:var(--shiny-base)}}
+
+/* --- gradient-text (recipes/web/gradient-text) : drifting gradient clipped to text --- */
+.gradient-text{ --g1:#b8895a; --g2:#d8a07a; --g3:#caa6c4;
+  background:linear-gradient(90deg,var(--g1),var(--g2),var(--g3),var(--g1));
+  background-size:300% 100%; -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent; animation:gradient-text-drift 6s ease-in-out infinite; }
+@keyframes gradient-text-drift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@media(prefers-reduced-motion:reduce){.gradient-text{animation:none;background:none;-webkit-text-fill-color:currentColor;color:var(--g1)}}
+
+/* --- star-border adapted → .glow (recipes/web/star-border) : light orbits a CTA border --- */
+@property --star-a{syntax:"<angle>";initial-value:0deg;inherits:false}
+.btn.glow{position:relative;isolation:isolate}
+.btn.glow::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;padding:2px;
+  background:conic-gradient(from var(--star-a),transparent 0 58%,var(--accent-2) 76%,#fff 82%,var(--accent-2) 88%,transparent 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;animation:star-spin 4.5s linear infinite}
+@keyframes star-spin{to{--star-a:360deg}}
+@media(prefers-reduced-motion:reduce){.btn.glow::before{animation:none;background:none;box-shadow:0 0 0 2px var(--accent)}}
+
+/* --- shine-border adapted → .btn.shine (recipes/web/shine-border) --- */
+@property --shine-angle{syntax:"<angle>";initial-value:0deg;inherits:false}
+.btn.shine{position:relative;isolation:isolate}
+.btn.shine::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;padding:2px;
+  background:conic-gradient(from var(--shine-angle),transparent 0%,var(--accent-2) 12%,#fff 16%,var(--accent-2) 20%,transparent 34%,transparent 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;animation:shine-spin 4s linear infinite}
+@keyframes shine-spin{to{--shine-angle:360deg}}
+@media(prefers-reduced-motion:reduce){.btn.shine::before{animation:none;background:none;box-shadow:0 0 0 2px var(--accent)}}
+
+/* --- border-beam → .beam (recipes/web/border-beam) : comet travels the border (light theme) --- */
+@property --beam-angle{syntax:"<angle>";initial-value:0deg;inherits:false}
+.beam{--beam-angle:0deg;--beam-color:var(--accent);--beam-size:1.5px;position:relative;border-radius:18px;
+  background:var(--bg);color:var(--ink);isolation:isolate;border:1px solid var(--line)}
+.beam::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;padding:var(--beam-size);
+  background:conic-gradient(from var(--beam-angle),transparent 0%,color-mix(in srgb,var(--beam-color) 30%,transparent) 4%,var(--beam-color) 8%,#fff 9%,var(--beam-color) 10%,transparent 16%,transparent 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;
+  filter:drop-shadow(0 0 3px var(--beam-color));animation:beam-travel 3s linear infinite}
+@keyframes beam-travel{to{--beam-angle:360deg}}
+@media(prefers-reduced-motion:reduce){.beam::before{animation:none;background:none;filter:none;border:var(--beam-size) solid rgba(184,137,90,.4)}}
+
+/* --- card-lift-hover (recipes/web/card-lift-hover) --- */
+.lift-card{transform:translateY(0);box-shadow:0 2px 10px rgba(20,18,14,.06);
+  transition:transform 200ms cubic-bezier(.16,1,.3,1),box-shadow 200ms cubic-bezier(.16,1,.3,1);will-change:transform}
+.lift-card:hover{transform:translateY(-6px);box-shadow:0 16px 32px rgba(20,18,14,.13)}
+.lift-card:active{transform:translateY(-2px)}
+@media(prefers-reduced-motion:reduce){.lift-card,.lift-card:hover,.lift-card:active{transform:none;transition:box-shadow 120ms ease}}
+
+/* --- glare-hover (recipes/web/glare-hover) --- */
+.glare{--gx:50%;--gy:50%;position:relative;overflow:hidden;border-radius:18px;isolation:isolate}
+.glare::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 220ms ease-out;
+  background:radial-gradient(240px circle at var(--gx) var(--gy),rgba(255,255,255,.35),transparent 55%)}
+.glare:hover::after{opacity:1}
+@media(prefers-reduced-motion:reduce){.glare::after{display:none}}
+@media(hover:none){.glare::after{display:none}}
+
+/* --- spotlight-card (recipes/web/spotlight-card) : light theme --- */
+.spotlight{position:relative;--mx:50%;--my:50%;border-radius:18px;background:var(--bg);color:var(--ink);
+  overflow:hidden;isolation:isolate;border:1px solid var(--line);transition:border-color 240ms ease-out}
+.spotlight::before{content:"";position:absolute;inset:0;z-index:-1;opacity:0;transition:opacity 240ms ease-out;
+  background:radial-gradient(260px circle at var(--mx) var(--my),rgba(184,137,90,.20),transparent 60%)}
+.spotlight:hover{border-color:rgba(184,137,90,.5)}
+.spotlight:hover::before{opacity:1}
+@media(prefers-reduced-motion:reduce){.spotlight::before{display:none}.spotlight{transition:none}}
+@media(hover:none){.spotlight::before{display:none}}
+
+/* --- true-focus (recipes/web/true-focus) : blurred words, one in focus --- */
+.tf{display:inline-flex;gap:.4em;flex-wrap:wrap}
+.tf>.tf-w{filter:blur(5px);opacity:.55;transition:filter .5s ease,opacity .5s ease}
+.tf>.tf-w.on{filter:blur(0);opacity:1}
+@media(prefers-reduced-motion:reduce){.tf>.tf-w{filter:none;opacity:1}}
+
+/* --- kinetic-headline (recipes/web/kinetic-headline) : staggered entrance --- */
+[data-kinetic]{display:inline-block}
+[data-kinetic] .k-unit{display:inline-block;opacity:0;transition:opacity 520ms cubic-bezier(.16,1,.3,1),transform 520ms cubic-bezier(.16,1,.3,1),filter 520ms ease-out;transition-delay:var(--k-delay,0ms);will-change:opacity,transform,filter}
+[data-kinetic].is-in .k-unit{opacity:1;transform:none;filter:none}
+[data-kinetic] .k-space{display:inline-block;width:.28em}
+.k-anim-rise .k-unit{transform:translateY(.5em)}
+.k-anim-drop .k-unit{transform:translateY(-.5em)}
+.k-anim-fade .k-unit{transform:none}
+.k-anim-slide .k-unit{transform:translateX(.6em)}
+.k-anim-pop .k-unit{transform:scale(.4);transition-timing-function:cubic-bezier(.34,1.56,.64,1)}
+.k-anim-blur .k-unit{transform:none;filter:blur(10px)}
+.k-anim-flip .k-unit{transform:rotateX(-90deg);transform-origin:bottom}
+.k-anim-spin .k-unit{transform:rotate(-18deg) scale(.6)}
+.k-anim-wave .k-unit{opacity:1;animation:kh-wave 1.8s ease-in-out infinite;animation-delay:var(--k-delay,0ms)}
+@keyframes kh-wave{0%,100%{transform:translateY(0)}50%{transform:translateY(-.22em)}}
+@media(prefers-reduced-motion:reduce){[data-kinetic] .k-unit{opacity:1!important;transform:none!important;filter:none!important;transition:none;animation:none!important}}
+
+/* --- count-up (recipes/web/count-up) --- */
+[data-count]{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+
+/* --- bounce-cards (recipes/web/bounce-cards) : spring entrance + stagger, adapted to a grid --- */
+.bcards{position:static;width:auto;height:auto}
+.bcards .bc{opacity:0;transform:translateY(22px) scale(.96);transition:opacity .5s ease-out,transform .6s cubic-bezier(.34,1.56,.64,1);transition-delay:var(--bc-d,0ms)}
+.bcards.in .bc{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.bcards .bc{transition:none;opacity:1;transform:none}}
+
+/* --- rotating-text (recipes/web/rotating-text) --- */
+.rot{display:inline-block;overflow:hidden;vertical-align:bottom}
+.rot>.rot-w{display:inline-block;transition:transform .45s cubic-bezier(.16,1,.3,1),opacity .45s}
+.rot.swap>.rot-w{transform:translateY(-100%);opacity:0}
+@media(prefers-reduced-motion:reduce){.rot>.rot-w{transition:none}}
+
+/* --- magnetic-button (recipes/web/magnetic-button) --- */
+.magnetic{transition:transform 180ms cubic-bezier(.34,1.56,.64,1);will-change:transform;-webkit-tap-highlight-color:transparent}
+.magnetic:active{transform:scale(.97)}
+@media(prefers-reduced-motion:reduce){.magnetic{transition:none}}
+
+/* --- decrypted-text needs no CSS (recipes/web/decrypted-text) --- */
+
+/* --- tilt-3d (recipes/web/tilt-3d) : pointer-driven 3D tilt + gold glare. Flat under reduced-motion/touch. --- */
+.tilt{ --rx:0deg; --ry:0deg; --gx:50%; --gy:50%; position:relative; transform-style:preserve-3d;
+  transform:perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)); transition:transform 220ms ease-out; will-change:transform; border-radius:var(--radius-lg); overflow:hidden; }
+.tilt::after{ content:""; position:absolute; inset:0; pointer-events:none; opacity:0; transition:opacity 220ms ease-out;
+  background:radial-gradient(220px circle at var(--gx) var(--gy),rgba(231,200,148,.28),transparent 60%); }
+.tilt:hover::after{ opacity:1; }
+@media(prefers-reduced-motion:reduce){ .tilt{transform:none;transition:none} .tilt::after{display:none} }
+@media(hover:none){ .tilt{transform:none} .tilt::after{display:none} }
+
+/* --- gooey-nav (recipes/web/gooey-nav) : sliding gold pill under the active tab. transform only. --- */
+.gnav{ position:relative; display:inline-flex; gap:4px; padding:5px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid var(--line); }
+.gnav .gn-pill{ position:absolute; top:5px; bottom:5px; border-radius:999px; background:linear-gradient(90deg,var(--accent),var(--accent-2)); transition:transform .35s cubic-bezier(.34,1.4,.5,1), width .35s cubic-bezier(.34,1.4,.5,1); z-index:0; box-shadow:0 8px 20px -10px var(--glow); }
+.gnav button{ position:relative; z-index:1; border:0; background:none; color:var(--ink-2); font:600 14px/1 var(--font-body); padding:9px 18px; border-radius:999px; cursor:pointer; transition:color .2s; }
+.gnav button.on{ color:var(--accent-ink); }
+@media(prefers-reduced-motion:reduce){ .gnav .gn-pill{transition:none} }
+
+/* --- magnet-lines (recipes/web/magnet-lines) : grid lines that rotate toward the pointer. --- */
+.mag-lines .ml{ transition:transform .12s ease-out; }
+@media(prefers-reduced-motion:reduce){ .mag-lines .ml{transition:none;transform:none!important} }
